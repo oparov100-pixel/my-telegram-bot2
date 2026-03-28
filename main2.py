@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import os
 import sys
 from datetime import datetime, timedelta, timezone
 
@@ -109,7 +110,7 @@ async def window_controller(application: Application) -> None:
 
     logger.info("20:00 — бот завершает работу до следующего запуска.")
     await application.stop()
-    sys.exit(0)
+    os._exit(0)
 
 
 async def start_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
