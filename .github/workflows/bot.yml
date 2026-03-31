@@ -1,24 +1,24 @@
 name: Telegram Bot
-
 on:
   schedule:
     - cron: '0 10 * * *'
   workflow_dispatch:
 
 jobs:
-  run-bot:
+  send-poll:
     runs-on: ubuntu-latest
-    timeout-minutes: 125
     steps:
-      - uses: actions/checkout@v4
+      - name: Send daily poll
+        run: |
+          DAYS=("" "Понедельник" "Вторник" "Среда" "Четверг" "Пятница" "Суббота" "Воскресенье")
+          DOW=$(date -u -d "tomorrow" +%u)
+          DATE_STR=$(date -u -d "tomorrow" +%d.%m.%Y)
+          TEXT="${DAYS[$DOW]} $DATE_STR"
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
+          curl -s -X POST "https://api.telegram.org/bot8383011601:AAHN71NavpUYgureHQ0j5JxQAVA-TjDquj0/sendMessage" \
+            -H "Content-Type: application/json" \
+            -d "{\"chat_id\": \"-1002977350246\", \"text\": \"$TEXT\"}"
 
-      - name: Install dependencies
-        run: pip install python-telegram-bot==21.9
-
-      - name: Run bot
-        run: python main2.py
+          curl -s -X POST "https://api.telegram.org/bot8383011601:AAHN71NavpUYgureHQ0j5JxQAVA-TjDquj0/sendPoll" \
+            -H "Content-Type: application/json" \
+            -d "{\"chat_id\": \"-1002977350246\", \"question\": \"Опрос 🐵🔵\", \"options\": [\"6-7\",\"7-9\",\"9-11\",\"11-13\",\"13-15\",\"15-17\",\"17-19\",\"19-21\",\"21-23\",\" -\"], \"is_anonymous\": false, \"type\": \"regular\"}"
